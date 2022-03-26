@@ -246,7 +246,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   MainSizer = new wxBoxSizer(wxVERTICAL);
 
   // Top logo
-  TopBitmap = new wxStaticBitmap(this, wxID_ANY, wxBitmap(bitmap_from_resource("abgx360gui/src/Images/logo_reloaded.png")), wxDefaultPosition, wxDefaultSize, 0);
+  TopBitmap = new wxStaticBitmap(this, wxID_ANY, wxBitmap(bitmap_from_resource("src/Images/logo_reloaded.png")), wxDefaultPosition, wxDefaultSize, 0);
   TopBitmap->SetBackgroundColour(wxColour(0, 0, 0));
   TopBitmap->SetMinSize(wxSize(-1, 80));
   MainSizer->Add(TopBitmap, 0, int(wxEXPAND) | wxBOTTOM, 5);
