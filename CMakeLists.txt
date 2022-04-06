@@ -11,10 +11,10 @@ cmrc_add_resource_library(foo-resources
 
 include_directories(src)
 
-if(UNIX)
-        # Set GTK3 for wxWidgets
-        set(wxWidgets_CONFIG_OPTIONS --toolkit=gtk3)
-endif()
+if (UNIX)
+    # Set GTK3 for wxWidgets
+    set(wxWidgets_CONFIG_OPTIONS --toolkit=gtk3)
+endif ()
 # Find wxWidgets
 # Note that for MinGW users the order of libs is important!
 find_package(wxWidgets REQUIRED net gl core base adv)
