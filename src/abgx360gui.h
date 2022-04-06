@@ -59,7 +59,7 @@
 #include <wx/dcbuffer.h>
 
 #if defined(_WIN32) || defined(__CLION_IDE__)
-  #include <ddk/ntddstor.h>  // device i/o stuff
+  #include <Ntddstor.h>  // device i/o stuff
 #endif
 
 #if defined(__APPLE__) || defined(__CLION_IDE__)
