@@ -597,7 +597,6 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   }
   DriveChoice = new wxChoice(InputPanel, ID_DRIVECHOICE, wxPoint(2, 30), wxSize(475, 23), arrayStringFor_DriveChoice, 0, wxDefaultValidator, wxT("DriveChoice"));
   DriveChoice->Show(false);
-  DriveChoice->SetFont(ABGX360GUI_FONT);
   DriveChoice->SetSelection(0);
 #endif
 
