@@ -7,7 +7,17 @@ include(CMakeRC.cmake)
 cmrc_add_resource_library(foo-resources
         ALIAS foo::rc
         NAMESPACE foo
-        src/Images/logo_reloaded.png)
+        src/Images/logo_reloaded.png
+        src/Images/favicon.png
+        src/Images/info_tip.png
+        src/Images/open_button.png
+        src/Images/save_button.png
+        src/Images/save_button_disabled.png
+        src/Images/launch_button_normal.png
+        src/Images/launch_button_click.png
+        src/Images/launch_button_over.png
+        src/Images/dotted_open_button.png
+        src/Images/dotted_open_button_disabled.png)
 
 include_directories(src)
 

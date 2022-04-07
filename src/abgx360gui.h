@@ -134,6 +134,20 @@ class abgx360gui : public wxFrame {
   void WhereImagesClick(wxCommandEvent &event);
 
  private:
+  // Image resources
+  wxBitmap wx_bitmap_logo;
+  wxBitmap wx_bitmap_favicon;
+  wxIcon wx_icon_favicon;
+  wxBitmap wx_bitmap_info_tip;
+  wxBitmap wx_bitmap_open_button;
+  wxBitmap wx_bitmap_save_button;
+  wxBitmap wx_bitmap_save_button_disabled;
+  wxBitmap wx_bitmap_launch_button_normal;
+  wxBitmap wx_bitmap_launch_button_click;
+  wxBitmap wx_bitmap_launch_button_over;
+  wxBitmap wx_bitmap_dotted_open_button;
+  wxBitmap wx_bitmap_dotted_open_button_disabled;
+
   //Do not add custom control declarations between
   //GUI Control Declaration Start and GUI Control Declaration End.
   //wxDev-C++ will remove them. Add custom code after the block.
@@ -292,7 +306,6 @@ class abgx360gui : public wxFrame {
   };
 
  private:
-  wxBitmap InfoTip_BITMAP;
   wxString open_filename, save_filename, cmd;
   void OnClose(wxCloseEvent &event);
   void assign_events();

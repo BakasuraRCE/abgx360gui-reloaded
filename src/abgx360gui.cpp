@@ -30,32 +30,6 @@ ABGX360GUI_FONT
 #include <list>
 #include "abgx360gui.h"
 
-//Do not add custom headers between
-//Header Include Start and Header Include End
-//wxDev-C++ designer will remove them
-////Header Include Start
-#include "Images/Self_abgx360gui_XPM.xpm"
-#include "Images/abgx360gui_ID_MNU_OPENINPUTFILE_1748_XPM.xpm"
-#include "Images/abgx360gui_ID_MNU_MAKEADONATION_1868_XPM.xpm"
-#include "Images/abgx360gui_ID_MNU_GOTOABGX360_NET_1869_XPM.xpm"
-#include "Images/InfoTip_XPM.xpm"
-#include "Images/abgx360gui_SaveButtonDisabled_XPM.xpm"
-#include "Images/abgx360gui_dottedOpenButtonDisabled_XPM.xpm"
-#include "Images/abgx360gui_TopBitmap_XPM.xpm"
-#include "Images/abgx360gui_SaveButton_XPM.xpm"
-#include "Images/abgx360gui_ExtractSSSaveButton_XPM.xpm"
-#include "Images/abgx360gui_ExtractDMISaveButton_XPM.xpm"
-#include "Images/abgx360gui_ExtractPFISaveButton_XPM.xpm"
-#include "Images/abgx360gui_ExtractVideoSaveButton_XPM.xpm"
-#include "Images/abgx360gui_PatchSSOpenButton_XPM.xpm"
-#include "Images/abgx360gui_PatchDMIOpenButton_XPM.xpm"
-#include "Images/abgx360gui_PatchPFIOpenButton_XPM.xpm"
-#include "Images/abgx360gui_PatchVideoOpenButton_XPM.xpm"
-#include "Images/abgx360gui_OpenButton_XPM.xpm"
-////Header Include End
-#include "Images/LaunchClick.xpm"
-#include "Images/LaunchNormal.xpm"
-#include "Images/LaunchOver.xpm"
 // Resource library
 #include <cmrc/cmrc.hpp>
 
@@ -237,7 +211,23 @@ wxMenuItem *abgx360gui::create_menu_item(int itemid, wxMenu *menu_parent, const 
 
 abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize &size, long style) : wxFrame(parent, id, title, position, size, style) {
 
-  this->InfoTip_BITMAP = wxBitmap(InfoTip_XPM);
+  // ////////////////
+  // Image resources
+  // ////////////////
+
+  this->wx_bitmap_logo = wxBitmap(bitmap_from_resource("src/Images/logo_reloaded.png"));
+  this->wx_bitmap_favicon = wxBitmap(bitmap_from_resource("src/Images/favicon.png"));
+  this->wx_icon_favicon = wxIcon();
+  this->wx_icon_favicon.CopyFromBitmap(this->wx_bitmap_favicon);
+  this->wx_bitmap_info_tip = wxBitmap(bitmap_from_resource("src/Images/info_tip.png"));
+  this->wx_bitmap_open_button = wxBitmap(bitmap_from_resource("src/Images/open_button.png"));
+  this->wx_bitmap_save_button = wxBitmap(bitmap_from_resource("src/Images/save_button.png"));
+  this->wx_bitmap_save_button_disabled = wxBitmap(bitmap_from_resource("src/Images/save_button_disabled.png"));
+  this->wx_bitmap_launch_button_normal = wxBitmap(bitmap_from_resource("src/Images/launch_button_normal.png"));
+  this->wx_bitmap_launch_button_click = wxBitmap(bitmap_from_resource("src/Images/launch_button_click.png"));
+  this->wx_bitmap_launch_button_over = wxBitmap(bitmap_from_resource("src/Images/launch_button_over.png"));
+  this->wx_bitmap_dotted_open_button = wxBitmap(bitmap_from_resource("src/Images/dotted_open_button.png"));
+  this->wx_bitmap_dotted_open_button_disabled = wxBitmap(bitmap_from_resource("src/Images/dotted_open_button_disabled.png"));
 
   // /////////
   // Controls
@@ -246,7 +236,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   MainSizer = new wxBoxSizer(wxVERTICAL);
 
   // Top logo
-  TopBitmap = new wxStaticBitmap(this, wxID_ANY, wxBitmap(bitmap_from_resource("src/Images/logo_reloaded.png")), wxDefaultPosition, wxDefaultSize, 0);
+  TopBitmap = new wxStaticBitmap(this, wxID_ANY, this->wx_bitmap_logo, wxDefaultPosition, wxDefaultSize, 0);
   TopBitmap->SetBackgroundColour(wxColour(0, 0, 0));
   TopBitmap->SetMinSize(wxSize(-1, 80));
   MainSizer->Add(TopBitmap, 0, int(wxEXPAND) | wxBOTTOM, 5);
@@ -285,7 +275,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   InputFileEditBox = new wxTextCtrl(InputSizer->GetStaticBox(), wxID_ANY, wxEmptyString);
   input_sub_2_sizer->Add(InputFileEditBox, 1, wxALL, 5);
 
-  OpenButton = new wxBitmapButton(InputSizer->GetStaticBox(), wxID_ANY, wxBitmap(abgx360gui_OpenButton_XPM));
+  OpenButton = new wxBitmapButton(InputSizer->GetStaticBox(), wxID_ANY, this->wx_bitmap_open_button);
   input_sub_2_sizer->Add(OpenButton, 0, wxALL, 5);
 
   Notebook = this->generate_notebook(this);
@@ -341,11 +331,10 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   OutputFileEditBox = new wxTextCtrl(OutputSizer->GetStaticBox(), wxID_ANY);
   OutputFileEditBox->Enable(false);
 
-  SaveButton = new wxBitmapButton(OutputSizer->GetStaticBox(), wxID_ANY, wxBitmap(abgx360gui_SaveButton_XPM));
+  SaveButton = new wxBitmapButton(OutputSizer->GetStaticBox(), wxID_ANY, this->wx_bitmap_save_button);
   SaveButton->SetToolTip(wxT("Choose the file where program output will be saved"));
   SaveButton->Enable(false);
-  auto SaveButtonDisabled_BITMAP = wxBitmap(abgx360gui_SaveButtonDisabled_XPM);
-  SaveButtonDisabled = new wxBitmapButton(this, ID_SAVE_BUTTON_DISABLED, SaveButtonDisabled_BITMAP);
+  SaveButtonDisabled = new wxBitmapButton(this, ID_SAVE_BUTTON_DISABLED, this->wx_bitmap_save_button_disabled);
   SaveButtonDisabled->Show(false);
   OutputSizer->Add(
 	  generate_box_sizer_with_controls({OutputFileEditBox, SaveButton}, wxALL, 5),
@@ -355,9 +344,9 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   LaunchPanel = new wxPanel(this, ID_LAUNCHPANEL);
   LaunchButton = new wxBitmapButton(this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW | 0);
   LaunchButton->SetBackgroundColour(wxColour(0, 0, 0));
-  LaunchButton->SetBitmap(wxBitmap(LaunchNormal_xpm));
-  LaunchButton->SetBitmapPressed(wxBitmap(LaunchClick_xpm));
-  LaunchButton->SetBitmapCurrent(wxBitmap(LaunchOver_xpm));
+  LaunchButton->SetBitmap(this->wx_bitmap_launch_button_normal);
+  LaunchButton->SetBitmapPressed(this->wx_bitmap_launch_button_click);
+  LaunchButton->SetBitmapCurrent(this->wx_bitmap_launch_button_over);
   MainSizer->Add(LaunchButton, 0, int(wxEXPAND) | wxALL, 10);
 
   StatusBar = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
@@ -366,9 +355,8 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   // /////////
   // Menus
   // /////////
-
-  auto dottedOpenButtonDisabled_BITMAP = wxBitmap(abgx360gui_dottedOpenButtonDisabled_XPM);
-  dottedOpenButtonDisabled = new wxBitmapButton(this, ID_DOTTED_OPEN_BUTTON_DISABLED, dottedOpenButtonDisabled_BITMAP);
+  
+  dottedOpenButtonDisabled = new wxBitmapButton(this, ID_DOTTED_OPEN_BUTTON_DISABLED, this->wx_bitmap_dotted_open_button_disabled);
   dottedOpenButtonDisabled->Show(false);
 
   wx_menu_bar = new wxMenuBar();
@@ -404,7 +392,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   this->create_menu_item(p_wx_menu_help,
 						 "&" + this->website,
 						 "Go to the official home of abgx360 to get the latest news and updates or join the chat for help",
-						 &abgx360gui::abgx360_netClick)->SetBitmap(wxBitmap(abgx360gui_ID_MNU_GOTOABGX360_NET_1869_XPM));
+						 &abgx360gui::abgx360_netClick)->SetBitmap(this->wx_bitmap_favicon);
   p_wx_menu_help->AppendSeparator();
   this->create_menu_item(p_wx_menu_help,
 						 "Where is my Stealth&Files folder...\tCtrl+F",
@@ -510,7 +498,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   // /////////////
 
   this->SetTitle(this->title + " v" + this->version);
-  this->SetIcon(Self_abgx360gui_XPM);
+  this->SetIcon(this->wx_icon_favicon);
 
   InputChoice->SetSelection(0);
   QuickstartChoice->SetSelection(0);
@@ -613,15 +601,15 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   DriveChoice->SetSelection(0);
 #endif
 
-  SaveButton->SetBitmapDisabled(SaveButtonDisabled_BITMAP);
-  PatchVideoOpenButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  PatchPFIOpenButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  PatchDMIOpenButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  PatchSSOpenButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  ExtractVideoSaveButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  ExtractPFISaveButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  ExtractDMISaveButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
-  ExtractSSSaveButton->SetBitmapDisabled(dottedOpenButtonDisabled_BITMAP);
+  SaveButton->SetBitmapDisabled(this->wx_bitmap_save_button_disabled);
+  PatchVideoOpenButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  PatchPFIOpenButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  PatchDMIOpenButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  PatchSSOpenButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  ExtractVideoSaveButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  ExtractPFISaveButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  ExtractDMISaveButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
+  ExtractSSSaveButton->SetBitmapDisabled(this->wx_bitmap_dotted_open_button_disabled);
 
   // form designer will randomly disable bitmaps...
   TopBitmap->Enable(true);
@@ -693,7 +681,7 @@ wxPanel *abgx360gui::generate_page_autofix(wxWindow *parent) {
   auto *sizer_left = new wxBoxSizer(wxVERTICAL);
 
   AutoFixTip = new InfoTip(panel,
-						   InfoTip_BITMAP,
+						   this->wx_bitmap_info_tip,
 						   wxT("Choose the threshold at which abgx360 will attempt to find verified stealth files and automatically patch them if found. Level 1 or 2 is recommended for your own rips and Level 3 is recommended for someone else's rips that you don't fully trust."));
   AutoFixText = new wxStaticText(panel, wxID_ANY, wxT("AutoFix Threshold:"));
   wxArrayString arrayStringFor_AutoFix;
@@ -707,26 +695,26 @@ wxPanel *abgx360gui::generate_page_autofix(wxWindow *parent) {
 
   auto *ss_sizer = new wxStaticBoxSizer(new wxStaticBox(panel, wxID_ANY, wxT("SS Challenge / Response Data")), wxVERTICAL);
 
-  TrustSSv2Tip = new InfoTip(ss_sizer->GetStaticBox(), InfoTip_BITMAP, wxT("See \"What is SS v2?\" under the Quickstart tab."));
+  TrustSSv2Tip = new InfoTip(ss_sizer->GetStaticBox(), this->wx_bitmap_info_tip, wxT("See \"What is SS v2?\" under the Quickstart tab."));
   TrustSSv2 = new wxCheckBox(ss_sizer->GetStaticBox(), wxID_ANY, wxT("Trust SS v2 angles"));
   TrustSSv2->SetValue(true);
   ss_sizer->Add(generate_box_sizer_with_controls({TrustSSv2, TrustSSv2Tip}), wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT, 5));
 
   FixAngle359 = new wxCheckBox(ss_sizer->GetStaticBox(), wxID_ANY, wxT("Adjust SS v1 angle 359 for iXtreme < v1.4"));
   FixAngle359Tip = new InfoTip(ss_sizer->GetStaticBox(),
-							   InfoTip_BITMAP,
+							   this->wx_bitmap_info_tip,
 							   wxT("iXtreme versions previous to v1.4 have a bug that will cause a valid angle of 359 degrees to be jittered to an invalid angle of 360 degrees (NOT safe for XBL). It is recommended to upgrade your firmware to the latest iXtreme version to fix this issue instead of relying on this option, but enabling it will adjust 359 to 0 for compatibility with older firmwares. Also note that enabling this option is harmless on newer firmwares (iXtreme v1.4 and later) as it merely changes the SS v1 angle deviation by 1 degree."));
   ss_sizer->Add(generate_box_sizer_with_controls({FixAngle359, FixAngle359Tip}), wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT, 5));
 
   FixDRTTip = new InfoTip(ss_sizer->GetStaticBox(),
-						  InfoTip_BITMAP,
+						  this->wx_bitmap_info_tip,
 						  wxT("abgx360 decrypts the host's CCRT (Crypted Challenge Response Table) and combines it with the drive's deobfuscated table in order to validate or invalidate the data stored in an additional table used by hacked firmwares to replay responses to challenges issued by the host. Some invalid conditions can't or shouldn't be fixed, but enabling this option will fix the most common conditions like missing C/R data caused by old buggy ripping firmwares or worn out drives. This data is always checked whether this option is enabled or not and an error message will appear if any data is missing or invalid. This option applies to SS v1 only and has no effect on SS v2."));
   FixDRT = new wxCheckBox(ss_sizer->GetStaticBox(), wxID_ANY, wxT("Fix C/R Table if data is invalid"));
   FixDRT->SetValue(true);
   ss_sizer->Add(generate_box_sizer_with_controls({FixDRT, FixDRTTip}), wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT, 5));
 
   FixBadAnglesTip = new InfoTip(ss_sizer->GetStaticBox(),
-								InfoTip_BITMAP,
+								this->wx_bitmap_info_tip,
 								wxT("Enabling this option will adjust the replay angles for Challenge Types 24 and 25 (Response Types 7 and 5) back to their CCRT targets if they deviate more than X degrees (default = 3). See \"Angle Deviation and You\" under the Quickstart tab for more on this. Deviation is always checked whether this option is enabled or not and a warning message will appear if any angle deviates more than 3 degrees (message is yellow - stealth is uncertain) or 9 degrees (message is red - stealth failed). This option applies to SS v1 only and has no effect on SS v2."));
   FixBadAngles = new wxCheckBox(ss_sizer->GetStaticBox(), wxID_ANY, wxT("Adjust angles that deviate more than"));
   FixBadAngles->SetValue(true);
@@ -778,7 +766,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   // //////
 
   PatchIfStealthPassesTip =
-	  new InfoTip(panel, InfoTip_BITMAP, wxT("The default behavior is to patch only if stealth fails and isn't AutoFixed, or stealth is uncertain and isn't verified/AutoFixed"));
+	  new InfoTip(panel, this->wx_bitmap_info_tip, wxT("The default behavior is to patch only if stealth fails and isn't AutoFixed, or stealth is uncertain and isn't verified/AutoFixed"));
   PatchIfStealthPasses = new wxCheckBox(panel, wxID_ANY, wxT("Patch even if stealth passes"), wxDefaultPosition, wxDefaultSize);
   sizer_left->Add(generate_box_sizer_with_controls({PatchIfStealthPasses, PatchIfStealthPassesTip}), wxSizerFlags().Expand());
 
@@ -789,7 +777,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   PatchVideoEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   PatchVideoEditBox->Enable(false);
 
-  PatchVideoOpenButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_PatchVideoOpenButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  PatchVideoOpenButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   PatchVideoOpenButton->Enable(false);
   sizer_left->Add(
 	  generate_box_sizer_with_controls({PatchVideo, PatchVideoEditBox, PatchVideoOpenButton}),
@@ -800,7 +788,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   PatchPFIEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   PatchPFIEditBox->Enable(false);
 
-  PatchPFIOpenButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_PatchPFIOpenButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  PatchPFIOpenButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   PatchPFIOpenButton->Enable(false);
   sizer_left->Add(
 	  generate_box_sizer_with_controls({PatchPFI, PatchPFIEditBox, PatchPFIOpenButton}),
@@ -811,7 +799,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   PatchDMIEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   PatchDMIEditBox->Enable(false);
 
-  PatchDMIOpenButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_PatchDMIOpenButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  PatchDMIOpenButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   PatchDMIOpenButton->Enable(false);
   sizer_left->Add(
 	  generate_box_sizer_with_controls({PatchDMI, PatchDMIEditBox, PatchDMIOpenButton}),
@@ -822,7 +810,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   PatchSSEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   PatchSSEditBox->Enable(false);
 
-  PatchSSOpenButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_PatchSSOpenButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator);
+  PatchSSOpenButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator);
   PatchSSOpenButton->Enable(false);
   sizer_left->Add(
 	  generate_box_sizer_with_controls({PatchSS, PatchSSEditBox, PatchSSOpenButton}),
@@ -840,7 +828,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   ExtractVideoEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   ExtractVideoEditBox->Enable(false);
 
-  ExtractVideoSaveButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_ExtractVideoSaveButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  ExtractVideoSaveButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   ExtractVideoSaveButton->Enable(false);
   sizer_right->Add(
 	  generate_box_sizer_with_controls({ExtractVideo, ExtractVideoEditBox, ExtractVideoSaveButton}),
@@ -855,7 +843,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   ExtractPFIEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   ExtractPFIEditBox->Enable(false);
 
-  ExtractPFISaveButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_ExtractPFISaveButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  ExtractPFISaveButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   ExtractPFISaveButton->Enable(false);
   sizer_right->Add(
 	  generate_box_sizer_with_controls({ExtractPFI, ExtractPFIEditBox, ExtractPFISaveButton}),
@@ -866,7 +854,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   ExtractDMIEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   ExtractDMIEditBox->Enable(false);
 
-  ExtractDMISaveButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_ExtractDMISaveButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  ExtractDMISaveButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   ExtractDMISaveButton->Enable(false);
   sizer_right->Add(
 	  generate_box_sizer_with_controls({ExtractDMI, ExtractDMIEditBox, ExtractDMISaveButton}),
@@ -877,7 +865,7 @@ wxPanel *abgx360gui::generate_page_manually_patch(wxWindow *parent) {
   ExtractSSEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
   ExtractSSEditBox->Enable(false);
 
-  ExtractSSSaveButton = new wxBitmapButton(panel, wxID_ANY, wxBitmap(abgx360gui_ExtractSSSaveButton_XPM), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
+  ExtractSSSaveButton = new wxBitmapButton(panel, wxID_ANY, this->wx_bitmap_dotted_open_button, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW);
   ExtractSSSaveButton->Enable(false);
   sizer_right->Add(
 	  generate_box_sizer_with_controls({ExtractSS, ExtractSSEditBox, ExtractSSSaveButton}),
@@ -906,7 +894,7 @@ wxPanel *abgx360gui::generate_page_misc(wxWindow *parent) {
   auto *sizer_left = new wxBoxSizer(wxVERTICAL);
 
   MyRegionTip = new InfoTip(panel,
-							InfoTip_BITMAP,
+							this->wx_bitmap_info_tip,
 							wxT("Optionally enter your console's region so abgx360 can display your game's region code in the appropriate color. If a game won't work on your console, the region code will be displayed in red so you won't overlook it and accidentally burn it. You can select multiple regions if you have multiple consoles."));
   MyRegion = new wxStaticText(panel, wxID_ANY, wxT("Your console's region code:"), wxDefaultPosition, wxDefaultSize);
   MyRegionEditBox = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
@@ -918,7 +906,7 @@ wxPanel *abgx360gui::generate_page_misc(wxWindow *parent) {
   )->GetSizer()->GetItem((size_t)1)->SetProportion(1);
 
   PreferredLangTip = new InfoTip(panel,
-								 InfoTip_BITMAP,
+								 this->wx_bitmap_info_tip,
 								 wxT("This will be the preferred language used when abgx360 displays strings from the Xex title resource such as the game description, achievements, avatar awards, etc. Languages that rely heavily on unicode characters are best viewed using HTML output. If the game does not support your preferred language, abgx360 will use the English language strings. Set the Verbosity Level under the Options tab to High if you want to see which languages are supported by an Xex."));
   PreferredLangText = new wxStaticText(panel, wxID_ANY, wxT("Preferred Language:"), wxDefaultPosition, wxDefaultSize);
   wxArrayString arrayStringFor_PreferredLangChoice;
@@ -941,7 +929,7 @@ wxPanel *abgx360gui::generate_page_misc(wxWindow *parent) {
 	  wxSizerFlags().Expand().Border(wxBOTTOM, 5)
   )->GetSizer()->GetItem((size_t)1)->SetProportion(1);
 
-  SplitVidTip = new InfoTip(panel, InfoTip_BITMAP, wxT("See \"To SplitVid or not to SplitVid\" under the Quickstart tab."));
+  SplitVidTip = new InfoTip(panel, this->wx_bitmap_info_tip, wxT("See \"To SplitVid or not to SplitVid\" under the Quickstart tab."));
   SplitVidText = new wxStaticText(panel, wxID_ANY, wxT("SplitVid:"), wxDefaultPosition, wxDefaultSize);
   wxArrayString arrayStringFor_SplitVid;
   arrayStringFor_SplitVid.Add(wxT("Add it if it doesn't exist or isn't valid"));
@@ -963,7 +951,7 @@ wxPanel *abgx360gui::generate_page_misc(wxWindow *parent) {
   XexImages->SetSelection(0);
   EmbedImages = new wxCheckBox(panel, wxID_ANY, wxT("Embed them in HTML"), wxDefaultPosition, wxDefaultSize);
   ImagesTip = new InfoTip(panel,
-						  InfoTip_BITMAP,
+						  this->wx_bitmap_info_tip,
 						  wxT("This refers to the game icon, achievement icons and gamer pictures located within the Xex title resource. Images are extracted to your \"Images\" folder (Press Ctrl+I to find it) with filename \"Title ID-Image ID.png\" (the Title ID will always be displayed when extracting images so that you can find them easily; also note that the game icon will always be Image ID 00008000). Images are only displayed by abgx360 when using HTML output, but you can choose to extract them always if you're using them for your own purpose. Note that not every Xex has a title resource (most bonus discs don't) and therefore images (as well as various strings and achievements) are not always available.\n\nYou can optionally choose to embed them in the HTML source code as data URIs for better portability (when using HTML output), otherwise the HTML source will contain absolute links to the images in your local \"Images\" folder."));
   sizer_left->Add(
 	  generate_box_sizer_with_controls({XexImagesText, XexImages, EmbedImages, ImagesTip}),
@@ -999,28 +987,28 @@ wxPanel *abgx360gui::generate_page_options(wxWindow *parent) {
   // //////
 
   CheckDVDFileTip = new InfoTip(panel,
-								InfoTip_BITMAP,
+								this->wx_bitmap_info_tip,
 								wxT("Checks that your ISO has a matching .dvd file with the correct layerbreak and iso filename and corrects it if not. If the .dvd file does not exist, it is created."));
   CheckDVDFile = new wxCheckBox(panel, wxID_ANY, wxT("Check/Create .dvd file"), wxDefaultPosition, wxDefaultSize);
   CheckDVDFile->SetValue(true);
   sizer_left->Add(generate_box_sizer_with_controls({CheckDVDFile, CheckDVDFileTip}), wxSizerFlags().Expand());
 
   CheckStealthTip = new InfoTip(panel,
-								InfoTip_BITMAP,
+								this->wx_bitmap_info_tip,
 								wxT("Checks that your game appears to have a valid SS (which is required for it to boot on ANY firmware) and appears to have valid stealth files which match the Xex (which are required for it to boot on iXtreme firmware)."));
   CheckStealth = new wxCheckBox(panel, wxID_ANY, wxT("Check Stealth"), wxDefaultPosition, wxDefaultSize);
   CheckStealth->SetValue(true);
   sizer_left->Add(generate_box_sizer_with_controls({CheckStealth, CheckStealthTip}), wxSizerFlags().Expand());
 
   VerifyTip = new InfoTip(panel,
-						  InfoTip_BITMAP,
+						  this->wx_bitmap_info_tip,
 						  wxT("Verifies that your SS, stealth files and game data match a verified rip in the abgx360 online database. (Do not confuse this with the abgx.net database; that's just a database of scene releases and has nothing to do with verification.) In order for a rip to become verified in the abgx360 database there must be two different uploads from rips which match in every way except for the RawSS CRC (which changes every time you rip a disc due to angle deviation). Verification will fail if no one has uploaded rips which share your Xex/SS/DMI combination (which changes for discs pressed on different equipment and from different masters). It shouldn't worry you if verification fails on your own rip; in that case you should be fine as long as stealth passes, AnyDVD corruption is not detected and your system is stable. However, if you're checking someone else's rip that you don't fully trust then it's recommended to set AutoFix to Level 3, and if verification fails, abgx360 will attempt to find a new set of verified stealth files that match your Xex (and automatically patch them if found)."));
   Verify = new wxCheckBox(panel, wxID_ANY, wxT("Verify if Stealth passes"), wxDefaultPosition, wxDefaultSize);
   Verify->SetValue(true);
   sizer_left->Add(generate_box_sizer_with_controls({Verify, VerifyTip}), wxSizerFlags().Expand());
 
   CheckVideoPaddingTip = new InfoTip(panel,
-									 InfoTip_BITMAP,
+									 this->wx_bitmap_info_tip,
 									 wxT("Checks that Video partitions are zero padded and pads them with zeros if not. This does not affect stealth and is most definitely a waste of time because whatever data is in the padding area is not even visible to the Xbox 360 host. So it doesn't matter if you enable this option or not, but you'll save some time if you leave it disabled. This should not be confused with the random padding check which is always performed on the game partition; that data IS visible to the Xbox 360 host and an ISO without random padding in the game partition will probably not even boot."));
   CheckVideoPadding = new wxCheckBox(panel, wxID_ANY, wxT("Check/Fix Video padding"), wxDefaultPosition, wxDefaultSize);
   sizer_left->Add(generate_box_sizer_with_controls({CheckVideoPadding, CheckVideoPaddingTip}), wxSizerFlags().Expand());
@@ -1046,7 +1034,7 @@ wxPanel *abgx360gui::generate_page_options(wxWindow *parent) {
   // //////
 
   CheckCorruptionTip = new InfoTip(panel,
-								   InfoTip_BITMAP,
+								   this->wx_bitmap_info_tip,
 								   wxT("Searches game data sectors for video files inserted by AnyDVD or any other application that does on-the-fly DVD copy protection removal. This check is performed automatically whenever the game CRC is checked so the only purpose of this option is to cause a game CRC check if nothing else did. See \"What is AnyDVD style corruption\" under the Quickstart tab for more info on game data corruption."));
   CheckCorruption = new wxCheckBox(panel, wxID_ANY, wxT("Check for AnyDVD style game data corruption"), wxDefaultPosition, wxDefaultSize);
   sizer_right->Add(generate_box_sizer_with_controls({CheckCorruption, CheckCorruptionTip}), wxSizerFlags().Expand());
@@ -1055,7 +1043,7 @@ wxPanel *abgx360gui::generate_page_options(wxWindow *parent) {
   sizer_right->Add(DisplayFilesystem, wxSizerFlags().Expand());
 
   CheckForUpdatesTip = new InfoTip(panel,
-								   InfoTip_BITMAP,
+								   this->wx_bitmap_info_tip,
 								   wxT("\"Check for updates\" will check for updates to abgx360.dat, which contains things like the latest version available and the most current known PFI/Video wave exceptions. Disabling this option is not recommended because you won't be notified when a new version of abgx360 is available and abgx360 might not be using the latest list of PFI/Video exceptions.\n\nThe \"Include the CSV\" option will check for updates to GameNameLookup.csv, which is used to look up the full verbose game name entered in the online database. This isn't really necessary since abgx360 can retrieve the game name directly from the default.xex, but you may still find it useful when the Xex's game name is heavily abbreviated (developers can only use a maximum of 22 characters) or there's no title resource present, or maybe you're just checking SS/DMI files and would like to know which game they're from."));
   OnlineUpdate = new wxCheckBox(panel, wxID_ANY, wxT("Check for updates"), wxDefaultPosition, wxDefaultSize);
   OnlineUpdate->SetHelpText(wxT("Download updated versions of GameNameLookup.csv and abgx360.dat from the online database if newer than existing files"));
@@ -1068,7 +1056,7 @@ wxPanel *abgx360gui::generate_page_options(wxWindow *parent) {
   sizer_right->Add(StayOffline, wxSizerFlags().Expand());
 
   GameCRCTip = new InfoTip(panel,
-						   InfoTip_BITMAP,
+						   this->wx_bitmap_info_tip,
 						   wxT("Checks the game data CRC if a verified ini is found to make sure that your game data isn't corrupt. Disabling this option is not recommended. If you want the game CRC to be checked always, you should also enable the option \"Check for AnyDVD style game data corruption\", which will cause a game CRC check if nothing else did and will search for the obvious signs of AnyDVD style corruption. This is the only good reason why you'd want to check the game CRC always, but note that in order for other types of corruption to be detected (for example: single bit errors commonly caused by unstable CPU/RAM), a verified ini must be found."));
   CheckGameCRCWhenNeeded = new wxCheckBox(panel, wxID_ANY, wxT("Check Game Partition CRC when needed"), wxDefaultPosition, wxDefaultSize);
   CheckGameCRCWhenNeeded->SetValue(true);
@@ -1132,13 +1120,13 @@ wxPanel *abgx360gui::generate_page_rebuilding(wxWindow *parent) {
   WxStaticText9 = new wxStaticText(panel, wxID_ANY, wxT("Choose the method for rebuilding an ISO if it's missing space for a video partition."), wxDefaultPosition, wxDefaultSize);
   sizer_left->Add(WxStaticText9, wxSizerFlags().Expand().Border(wxBOTTOM, 10));
 
-  RebuildDefaultTip = new InfoTip(panel, InfoTip_BITMAP, wxT("Requires 7 to 7.5 GB free space on the partition your ISO is located."));
+  RebuildDefaultTip = new InfoTip(panel, this->wx_bitmap_info_tip, wxT("Requires 7 to 7.5 GB free space on the partition your ISO is located."));
   RebuildDefault = new wxRadioButton(panel, wxID_ANY, wxT("Default Method"), wxDefaultPosition, wxDefaultSize);
   RebuildDefault->SetValue(true);
   sizer_left->Add(generate_box_sizer_with_controls({RebuildDefault, RebuildDefaultTip}), wxSizerFlags().Expand());
 
   RebuildLowSpaceTip =
-	  new InfoTip(panel, InfoTip_BITMAP, wxT("Only requires 253 MB free space but will corrupt your ISO if it fails during the rebuilding process."), wxDefaultPosition, wxDefaultSize);
+	  new InfoTip(panel, this->wx_bitmap_info_tip, wxT("Only requires 253 MB free space but will corrupt your ISO if it fails during the rebuilding process."), wxDefaultPosition, wxDefaultSize);
   RebuildLowSpace = new wxRadioButton(panel, wxID_ANY, wxT("Low Disk Space Method"), wxDefaultPosition, wxDefaultSize);
   sizer_left->Add(generate_box_sizer_with_controls({RebuildLowSpace, RebuildLowSpaceTip}), wxSizerFlags().Expand());
 
@@ -2255,7 +2243,7 @@ void abgx360gui::MnuAboutClick(wxCommandEvent &WXUNUSED(event)) {
   int random = random_number(0, int(aDescriptions.GetCount() - 1));
 
   wxAboutDialogInfo info;
-  info.SetIcon(Self_abgx360gui_XPM);
+  info.SetIcon(this->wx_icon_favicon);
   info.SetName(this->title);
   info.SetVersion(this->version);
   info.SetCopyright(wxT("(C) 2008-2009 by Seacrest\n(C) 2021-" + std::to_string(wxDateTime::Today().GetYear()) + " by Bakasura"));
