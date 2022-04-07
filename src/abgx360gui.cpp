@@ -521,25 +521,25 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 #endif
 
 #if defined(_WIN32) || defined(__CLION_IDE__)
-  CHAR lpszDrive[4];
-  CHAR lpszDriveForCreateFile[7];
-  CHAR cDrive;
+  WCHAR lpszDrive[4];
+  WCHAR lpszDriveForCreateFile[7];
+  WCHAR cDrive;
   HANDLE hDevice;
   wxString volumestuff;
-  CHAR lpDeviceNameBuffer[1024];
+  WCHAR lpDeviceNameBuffer[1024];
   STORAGE_PROPERTY_QUERY query;
   UCHAR outBuf[1024];
   ULONG returnedLength;
   PSTORAGE_DEVICE_DESCRIPTOR devDesc;
   PUCHAR p;
   ULONG i, j;
-  for (cDrive = 'A'; cDrive <= 'Z'; cDrive++) {
+  for (cDrive = L'A'; cDrive <= L'Z'; cDrive++) {
 	memset(outBuf, 0, 1024);
 	memset(lpDeviceNameBuffer, 0, 1024);
-	sprintf(lpszDrive, "%c:\\", cDrive);
+	swprintf(lpszDrive, L"%c:\\", cDrive);
 	// get the drive type, if it's a CD-ROM insert it into the list
 	if (GetDriveType(lpszDrive) == DRIVE_CDROM) {
-	  sprintf(lpszDriveForCreateFile, "\\\\.\\%c:", cDrive);
+	  swprintf(lpszDriveForCreateFile, L"\\\\.\\%c:", cDrive);
 	  hDevice = CreateFile(lpszDriveForCreateFile, GENERIC_READ | GENERIC_WRITE,
 						   FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	  if (hDevice != INVALID_HANDLE_VALUE) {
@@ -590,7 +590,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 		}
 		CloseHandle(hDevice);
 	  }
-	  if (strlen(lpDeviceNameBuffer)) volumestuff.Printf(wxT("%s (%c:)"), lpDeviceNameBuffer, cDrive);
+	  if (wcslen(lpDeviceNameBuffer)) volumestuff.Printf(wxT("%s (%c:)"), lpDeviceNameBuffer, cDrive);
 	  else volumestuff.Printf(wxT("(%c:)"), cDrive);
 	  arrayStringFor_DriveChoice.Add(wxT(volumestuff));
 	}
