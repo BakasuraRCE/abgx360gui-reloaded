@@ -592,7 +592,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 	  }
 	  if (wcslen(lpDeviceNameBuffer)) volumestuff.Printf(wxT("%s (%c:)"), lpDeviceNameBuffer, cDrive);
 	  else volumestuff.Printf(wxT("(%c:)"), cDrive);
-	  arrayStringFor_DriveChoice.Add(wxT(volumestuff));
+	  arrayStringFor_DriveChoice.Add(volumestuff);
 	}
   }
   DriveChoice = new wxChoice(InputPanel, ID_DRIVECHOICE, wxPoint(2, 30), wxSize(475, 23), arrayStringFor_DriveChoice, 0, wxDefaultValidator, wxT("DriveChoice"));
