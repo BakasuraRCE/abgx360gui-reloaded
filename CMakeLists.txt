@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.21)
+if(WIN32)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 project(abgx360gui)
+
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -31,11 +36,12 @@ find_package(wxWidgets REQUIRED net gl core base adv)
 include(${wxWidgets_USE_FILE})
 
 # Add executable
-add_executable(abgx360gui
+add_executable(abgx360gui WIN32
         src/abgx360gui.cpp
         src/abgx360gui.h
         src/abgx360guiApp.cpp
-        src/abgx360guiApp.h)
+        src/abgx360guiApp.h
+        abgx360gui.rc)
 
 # Link wxWidgets deps
 # and for each of your dependent executable/library targets:
