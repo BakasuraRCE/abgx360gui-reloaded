@@ -503,6 +503,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 
   this->SetTitle(this->title + " v" + this->version);
   this->SetIcon(this->wx_icon_favicon);
+  this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
   InputChoice->SetSelection(0);
   QuickstartChoice->SetSelection(0);
