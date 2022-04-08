@@ -92,7 +92,11 @@ std::string wrap_command(const std::string &terminal, const std::string &cmd) {
   // change " to \\"
   escaped_cmd.Replace("\\\"", "\\\\\"", true);
 
-  if (terminal.compare("gnome-terminal") == 0) {
+  if (terminal.compare("cmd") == 0) {
+	wrapped = terminal + " /c '" + escaped_cmd.ToStdString() + "'";
+  } else if (terminal.compare("powershell") == 0) {
+	wrapped = terminal + " -c '" + escaped_cmd.ToStdString() + "'";
+  } else if (terminal.compare("gnome-terminal") == 0) {
 	wrapped = terminal + " --geometry 80x400+0+0 -- sh -c '" + escaped_cmd.ToStdString() + "'";
   } else if (terminal.compare("xterm") == 0 || terminal.compare("uxterm") == 0) {
 	wrapped = terminal + " -bg black -geometry 80x400+0+0 -e '" + escaped_cmd.ToStdString() + "'";
