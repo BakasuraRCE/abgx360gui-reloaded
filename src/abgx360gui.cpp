@@ -237,15 +237,22 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   // Controls
   // /////////
 
+  auto root_sizer = new wxBoxSizer(wxVERTICAL);
   MainSizer = new wxBoxSizer(wxVERTICAL);
 
+  // We need this panel to get correct bg on Windows
+  // https://wiki.wxwidgets.org/WxFAQ#Why_are_backgrounds_of_windows_ugly.2C_dark_grey_on_Windows.3F_I_want_them_like_my_dialog_boxes.
+  auto panel_main = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+  root_sizer->Add(panel_main, 1, int(wxEXPAND) | wxALL, 0);
+  panel_main->SetSizer(MainSizer);
+
   // Top logo
-  TopBitmap = new wxStaticBitmap(this, wxID_ANY, this->wx_bitmap_logo, wxDefaultPosition, wxDefaultSize, 0);
+  TopBitmap = new wxStaticBitmap(panel_main, wxID_ANY, this->wx_bitmap_logo, wxDefaultPosition, wxDefaultSize, 0);
   TopBitmap->SetBackgroundColour(wxColour(0, 0, 0));
   TopBitmap->SetMinSize(wxSize(-1, 80));
   MainSizer->Add(TopBitmap, 0, int(wxEXPAND) | wxBOTTOM, 5);
 
-  InputSizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxT("Input")), wxVERTICAL);
+  InputSizer = new wxStaticBoxSizer(new wxStaticBox(panel_main, wxID_ANY, wxT("Input")), wxVERTICAL);
   MainSizer->Add(InputSizer, 0, int(wxEXPAND) | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
   auto *input_sub_1_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -282,10 +289,10 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   OpenButton = new wxBitmapButton(InputSizer->GetStaticBox(), wxID_ANY, this->wx_bitmap_open_button);
   input_sub_2_sizer->Add(OpenButton, 0, wxALL, 5);
 
-  Notebook = this->generate_notebook(this);
+  Notebook = this->generate_notebook(panel_main);
   MainSizer->Add(Notebook, 1, int(wxEXPAND) | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
-  OutputSizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxT("Program Output")), wxVERTICAL);
+  OutputSizer = new wxStaticBoxSizer(new wxStaticBox(panel_main, wxID_ANY, wxT("Program Output")), wxVERTICAL);
   MainSizer->Add(OutputSizer, 0, int(wxEXPAND) | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
   wxArrayString arrayStringFor_ProgramOutput;
@@ -338,29 +345,29 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   SaveButton = new wxBitmapButton(OutputSizer->GetStaticBox(), wxID_ANY, this->wx_bitmap_save_button);
   SaveButton->SetToolTip(wxT("Choose the file where program output will be saved"));
   SaveButton->Enable(false);
-  SaveButtonDisabled = new wxBitmapButton(this, ID_SAVE_BUTTON_DISABLED, this->wx_bitmap_save_button_disabled);
+  SaveButtonDisabled = new wxBitmapButton(panel_main, ID_SAVE_BUTTON_DISABLED, this->wx_bitmap_save_button_disabled);
   SaveButtonDisabled->Show(false);
   OutputSizer->Add(
 	  generate_box_sizer_with_controls({OutputFileEditBox, SaveButton}, wxALL, 5),
 	  wxSizerFlags().Expand().Border(wxRIGHT | wxBOTTOM, 5)
   )->GetSizer()->GetItem((size_t)0)->SetProportion(1);
 
-  LaunchPanel = new wxPanel(this, ID_LAUNCHPANEL);
-  LaunchButton = new wxBitmapButton(this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW | 0);
+  LaunchPanel = new wxPanel(panel_main, ID_LAUNCHPANEL);
+  LaunchButton = new wxBitmapButton(panel_main, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW | 0);
   LaunchButton->SetBackgroundColour(wxColour(0, 0, 0));
   LaunchButton->SetBitmap(this->wx_bitmap_launch_button_normal);
   LaunchButton->SetBitmapPressed(this->wx_bitmap_launch_button_click);
   LaunchButton->SetBitmapCurrent(this->wx_bitmap_launch_button_over);
   MainSizer->Add(LaunchButton, 0, int(wxEXPAND) | wxALL, 10);
 
-  StatusBar = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
+  StatusBar = new wxTextCtrl(panel_main, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
   MainSizer->Add(StatusBar, 0, wxEXPAND, 0);
 
   // /////////
   // Menus
   // /////////
-  
-  dottedOpenButtonDisabled = new wxBitmapButton(this, ID_DOTTED_OPEN_BUTTON_DISABLED, this->wx_bitmap_dotted_open_button_disabled);
+
+  dottedOpenButtonDisabled = new wxBitmapButton(panel_main, ID_DOTTED_OPEN_BUTTON_DISABLED, this->wx_bitmap_dotted_open_button_disabled);
   dottedOpenButtonDisabled->Show(false);
 
   wx_menu_bar = new wxMenuBar();
@@ -415,21 +422,21 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   // Dialogs
   // /////////
 
-  SaveVideoFileDialog = new wxFileDialog(this,
+  SaveVideoFileDialog = new wxFileDialog(panel_main,
 										 wxT("Choose a file"),
 										 wxEmptyString,
 										 wxEmptyString,
 										 wxT("Video Files (*video*.iso)|*video*.iso|ISO Files (*.iso)|*.iso|All Files (*.*)|*.*"),
 										 wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-  OpenVideoFileDialog = new wxFileDialog(this,
+  OpenVideoFileDialog = new wxFileDialog(panel_main,
 										 wxT("Choose a file"),
 										 wxEmptyString,
 										 wxEmptyString,
 										 wxT("Video Files (*video*.iso)|*video*.iso|ISO Files (*.iso)|*.iso|All Files (*.*)|*.*"),
 										 wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-  OpenFileDialog = new wxFileDialog(this,
+  OpenFileDialog = new wxFileDialog(panel_main,
 									wxT("Choose a file"),
 									wxEmptyString,
 									wxEmptyString,
@@ -437,23 +444,23 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 									wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE);
 
   SavePFIFileDialogClobber =
-	  new wxFileDialog(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("PFI Files (*pfi*.bin)|*pfi*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"), wxFD_SAVE);
+	  new wxFileDialog(panel_main, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("PFI Files (*pfi*.bin)|*pfi*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"), wxFD_SAVE);
 
-  OpenSSFileDialog = new wxFileDialog(this,
+  OpenSSFileDialog = new wxFileDialog(panel_main,
 									  wxT("Choose a file"),
 									  wxEmptyString,
 									  wxEmptyString,
 									  wxT("SS Files (*ss*.bin)|*ss*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"),
 									  wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-  OpenPFIFileDialog = new wxFileDialog(this,
+  OpenPFIFileDialog = new wxFileDialog(panel_main,
 									   wxT("Choose a file"),
 									   wxEmptyString,
 									   wxEmptyString,
 									   wxT("PFI Files (*pfi*.bin)|*pfi*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"),
 									   wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-  SaveDMIFileDialog = new wxFileDialog(this,
+  SaveDMIFileDialog = new wxFileDialog(panel_main,
 									   wxT("Choose a file"),
 									   wxEmptyString,
 									   wxEmptyString,
@@ -461,16 +468,16 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 									   wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
   SaveVideoFileDialogClobber =
-	  new wxFileDialog(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("Video Files (*video*.iso)|*video*.iso|ISO Files (*.iso)|*.iso|All Files (*.*)|*.*"), wxFD_SAVE);
+	  new wxFileDialog(panel_main, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("Video Files (*video*.iso)|*video*.iso|ISO Files (*.iso)|*.iso|All Files (*.*)|*.*"), wxFD_SAVE);
 
-  OpenDMIFileDialog = new wxFileDialog(this,
+  OpenDMIFileDialog = new wxFileDialog(panel_main,
 									   wxT("Choose a file"),
 									   wxEmptyString,
 									   wxEmptyString,
 									   wxT("DMI Files (*dmi*.bin)|*dmi*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"),
 									   wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-  SavePFIFileDialog = new wxFileDialog(this,
+  SavePFIFileDialog = new wxFileDialog(panel_main,
 									   wxT("Choose a file"),
 									   wxEmptyString,
 									   wxEmptyString,
@@ -478,19 +485,20 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 									   wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
   SaveHTMLFileDialog =
-	  new wxFileDialog(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("HTML Files (*.html, *.htm)|*.html;*.htm|All Files (*.*)|*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	  new wxFileDialog(panel_main, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("HTML Files (*.html, *.htm)|*.html;*.htm|All Files (*.*)|*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-  SaveTextFileDialog = new wxFileDialog(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+  SaveTextFileDialog =
+	  new wxFileDialog(panel_main, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-  InputDirDialog = new wxDirDialog(this, wxT("Choose a directory"), wxEmptyString);
+  InputDirDialog = new wxDirDialog(panel_main, wxT("Choose a directory"), wxEmptyString);
 
   SaveDMIFileDialogClobber =
-	  new wxFileDialog(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("DMI Files (*dmi*.bin)|*dmi*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"), wxFD_SAVE);
+	  new wxFileDialog(panel_main, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("DMI Files (*dmi*.bin)|*dmi*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"), wxFD_SAVE);
 
   SaveSSFileDialogClobber =
-	  new wxFileDialog(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("SS Files (*ss*.bin)|*ss*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"), wxFD_SAVE);
+	  new wxFileDialog(panel_main, wxT("Choose a file"), wxEmptyString, wxEmptyString, wxT("SS Files (*ss*.bin)|*ss*.bin|.bin Files (*.bin)|*.bin|All Files (*.*)|*.*"), wxFD_SAVE);
 
-  SaveSSFileDialog = new wxFileDialog(this,
+  SaveSSFileDialog = new wxFileDialog(panel_main,
 									  wxT("Choose a file"),
 									  wxEmptyString,
 									  wxEmptyString,
@@ -503,7 +511,6 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 
   this->SetTitle(this->title + " v" + this->version);
   this->SetIcon(this->wx_icon_favicon);
-  this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
   InputChoice->SetSelection(0);
   QuickstartChoice->SetSelection(0);
@@ -645,7 +652,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   // Set size of Frame
   // /////////////////
 
-  this->SetSizer(MainSizer);
+  this->SetSizer(root_sizer);
   this->Layout();
   this->Fit();
 
@@ -1130,7 +1137,11 @@ wxPanel *abgx360gui::generate_page_rebuilding(wxWindow *parent) {
   sizer_left->Add(generate_box_sizer_with_controls({RebuildDefault, RebuildDefaultTip}), wxSizerFlags().Expand());
 
   RebuildLowSpaceTip =
-	  new InfoTip(panel, this->wx_bitmap_info_tip, wxT("Only requires 253 MB free space but will corrupt your ISO if it fails during the rebuilding process."), wxDefaultPosition, wxDefaultSize);
+	  new InfoTip(panel,
+				  this->wx_bitmap_info_tip,
+				  wxT("Only requires 253 MB free space but will corrupt your ISO if it fails during the rebuilding process."),
+				  wxDefaultPosition,
+				  wxDefaultSize);
   RebuildLowSpace = new wxRadioButton(panel, wxID_ANY, wxT("Low Disk Space Method"), wxDefaultPosition, wxDefaultSize);
   sizer_left->Add(generate_box_sizer_with_controls({RebuildLowSpace, RebuildLowSpaceTip}), wxSizerFlags().Expand());
 
