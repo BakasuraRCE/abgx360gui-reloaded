@@ -92,7 +92,9 @@ std::string wrap_command(const std::string &terminal, const std::string &cmd) {
   // change " to \\"
   escaped_cmd.Replace("\\\"", "\\\\\"", true);
 
-  if (terminal.compare("cmd") == 0) {
+  if (terminal.compare("wt") == 0) {
+	wrapped = terminal + escaped_cmd.ToStdString();
+  } else if (terminal.compare("cmd") == 0) {
 	wrapped = terminal + " /c \"" + escaped_cmd.ToStdString() + "\"";
   } else if (terminal.compare("powershell") == 0) {
 	escaped_cmd.Replace("abgx360 ", "", false); // remove executable from start
@@ -305,8 +307,15 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 
   wxArrayString wx_array_string_terminals;
 #if defined(_WIN32) || defined(__CLION_IDE__)
-  wx_array_string_terminals.Add(wxT("cmd"));
-  wx_array_string_terminals.Add(wxT("powershell"));
+  std::vector<std::string> terminal_list{"wt", "cmd", "powershell"};
+
+  for (auto _terminal : terminal_list) {
+	wxArrayString out, err;
+	int ret = wxExecute("where " + _terminal, out, err, wxEXEC_SYNC | wxEXEC_HIDE_CONSOLE);
+	if (ret == 0 && err.IsEmpty()) {
+	  wx_array_string_terminals.Add(_terminal);
+	}
+  }
 #endif
 #if defined(__linux__) || defined(__APPLE__) || defined(__CLION_IDE__)
 
