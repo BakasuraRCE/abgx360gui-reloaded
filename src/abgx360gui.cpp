@@ -87,10 +87,12 @@ std::string wrap_command(const std::string &terminal, const std::string &cmd) {
   std::string wrapped = "";
 
   wxString escaped_cmd = cmd;
+  #if defined(__linux__) || defined(__CLION_IDE__)
   // change ' to '\''
   escaped_cmd.Replace("'", "'\\''", true);
   // change " to \\"
   escaped_cmd.Replace("\\\"", "\\\\\"", true);
+  #endif
 
   if (terminal.compare("wt") == 0) {
 	wrapped = terminal + " " + escaped_cmd.ToStdString();
