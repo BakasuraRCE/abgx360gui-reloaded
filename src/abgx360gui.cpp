@@ -93,7 +93,7 @@ std::string wrap_command(const std::string &terminal, const std::string &cmd) {
   escaped_cmd.Replace("\\\"", "\\\\\"", true);
 
   if (terminal.compare("wt") == 0) {
-	wrapped = terminal + escaped_cmd.ToStdString();
+	wrapped = terminal + " " + escaped_cmd.ToStdString();
   } else if (terminal.compare("cmd") == 0) {
 	wrapped = terminal + " /c \"" + escaped_cmd.ToStdString() + "\"";
   } else if (terminal.compare("powershell") == 0) {
