@@ -98,9 +98,6 @@ std::string wrap_command(const std::string &terminal, const std::string &cmd) {
 	wrapped = terminal + " " + escaped_cmd.ToStdString();
   } else if (terminal.compare("cmd") == 0) {
 	wrapped = terminal + " /c \"" + escaped_cmd.ToStdString() + "\"";
-  } else if (terminal.compare("powershell") == 0) {
-	escaped_cmd.Replace("abgx360 ", "", false); // remove executable from start
-	wrapped = terminal + " Start-Process -NoNewWindow -FilePath abgx360 -ArgumentList '" + escaped_cmd.ToStdString() + "'";
   } else if (terminal.compare("gnome-terminal") == 0) {
 	wrapped = terminal + " --geometry 80x400+0+0 -- sh -c '" + escaped_cmd.ToStdString() + "'";
   } else if (terminal.compare("xterm") == 0 || terminal.compare("uxterm") == 0) {
@@ -309,7 +306,7 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
 
   wxArrayString wx_array_string_terminals;
 #if defined(_WIN32) || defined(__CLION_IDE__)
-  std::vector<std::string> terminal_list{"wt", "cmd", "powershell"};
+  std::vector<std::string> terminal_list{"wt", "cmd"};
 
   for (auto _terminal : terminal_list) {
 	wxArrayString out, err;
