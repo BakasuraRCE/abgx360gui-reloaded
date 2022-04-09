@@ -338,11 +338,9 @@ abgx360gui::abgx360gui(wxWindow *parent, wxWindowID id, const wxString &title, c
   Terminal->SetSelection(0);
 
   Maximize = new wxCheckBox(OutputSizer->GetStaticBox(), wxID_ANY, wxT("Maximize it"));
-  Maximize->SetValue(true);
   OpenFileWhenDone = new wxCheckBox(OutputSizer->GetStaticBox(), wxID_ANY, wxT("Open file when done"));
   OpenFileWhenDone->Show(false);
   TerminalFont = new wxCheckBox(OutputSizer->GetStaticBox(), wxID_ANY, wxT("Use Terminal font characters"));
-  TerminalFont->SetValue(true);
   OutputSizer->Add(
 	  generate_box_sizer_with_controls({ProgramOutput, Terminal, Maximize, OpenFileWhenDone, TerminalFont}, wxALL, 5),
 	  wxSizerFlags().Expand().Border(wxRIGHT, 5)
